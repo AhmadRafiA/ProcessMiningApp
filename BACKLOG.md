@@ -107,3 +107,22 @@ Fokus: Menyelesaikan titik masuk aplikasi (`main.py` & `main_cli.py`), memverifi
   * Verifikasi ketahanan memori, responsivitas tabel $>30.000$ baris, dan penutupan jendela aplikasi saat `QThread` aktif.
   * `Referensi: AGENTS.md, docs/ARCHITECTURE.md, docs/DESIGN_SYSTEM.md`
 
+---
+
+## Stage 6: Generic Filter Builder ala Fluxicon Disco (Opsi A)
+
+Fokus: Mengimplementasikan mesin penyaring data tingkat lanjut ala Fluxicon Disco (Attribute, Endpoints, Performance, Follower, Timeframe) dengan tumpukan filter berantai, integrasi drill-down Case Explorer, dan ekspor CSV.
+
+* **[x] M6.1 — Mesin Filter Domain Murni & Aturan Evaluasi (`core/filters.py`)**
+  * Implementasikan kontrak `FilterType`, `FilterMode`, subkelas `BaseFilterRule` (Attribute, Endpoints, Performance, Follower, Timeframe), dan fungsi evaluasi `apply_filter_stack()` berbasis vektorisasi Pandas/NumPy.
+  * Tambahkan fungsi ekspor CSV atomik `export_filtered_cases_csv()` di `core/exporter.py`.
+
+* **[x] M6.2 — Komponen UI Filter Builder & Integrasi Shell (`ui/dialogs/filter_dialog.py`, `ui/pages/filter_page.py`, `ui/main_window.py`)**
+  * Bangun `AddFilterDialog` untuk konfigurasi interaktif kelima tipe filter Disco.
+  * Bangun `FilterBuilderPage` dengan panel tumpukan filter kiri (kartu filter, toggle, delete, waterfall indicator) dan panel kanan (kartu metrik KPI, pencarian Case ID, tabel kasus lolos, drilldown ke Case Explorer, ekspor CSV).
+  * Daftarkan halaman ke-6 di sidebar navigasi `MainWindow` dan hubungkan sinyal drilldown.
+
+* **[x] M6.3 — Automated Testing & Quality Gates (`tests/test_filters.py`)**
+  * Buat suite pengujian unit lengkap (11 test) untuk kelima tipe filter, toggle aktif/nonaktif, penanganan hasil kosong, integrasi UI, dan penjagaan zero-Qt imports di `core/filters.py`.
+  * Pastikan 71/71 test lulus 100%, `mypy` 0 error, dan `ruff` 0 warning.
+

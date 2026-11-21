@@ -35,6 +35,7 @@ from ui.pages.case_explorer_page import CaseExplorerPage
 from ui.pages.ex11_7_page import Ex11_7Page
 from ui.pages.ex11_15_18_page import Ex11_15_18Page
 from ui.pages.ex11_22_page import Ex11_22Page
+from ui.pages.filter_page import FilterBuilderPage
 from ui.pages.overview_page import OverviewPage
 from ui.theme import apply_light_theme
 from ui.workers import AnalysisWorker, ImportWorker
@@ -175,18 +176,21 @@ class MainWindow(QMainWindow):
         self.page_11_15_18 = Ex11_15_18Page()
         self.page_11_22 = Ex11_22Page()
         self.page_case_explorer = CaseExplorerPage()
+        self.page_filter_builder = FilterBuilderPage()
 
         self.stacked_widget.addWidget(self.page_overview)        # Index 0
         self.stacked_widget.addWidget(self.page_11_7)            # Index 1
         self.stacked_widget.addWidget(self.page_11_15_18)        # Index 2
         self.stacked_widget.addWidget(self.page_11_22)           # Index 3
         self.stacked_widget.addWidget(self.page_case_explorer)   # Index 4
+        self.stacked_widget.addWidget(self.page_filter_builder)  # Index 5
 
         # Wire Drill-Down Navigation Signals to Case Explorer
         self.page_overview.request_case_drilldown.connect(self._handle_drilldown)
         self.page_11_7.request_case_drilldown.connect(self._handle_drilldown)
         self.page_11_15_18.request_case_drilldown.connect(self._handle_drilldown)
         self.page_11_22.request_case_drilldown.connect(self._handle_drilldown)
+        self.page_filter_builder.request_case_drilldown.connect(self._handle_drilldown)
 
         body_layout.addWidget(self.stacked_widget, stretch=1)
         root_layout.addLayout(body_layout, stretch=1)
@@ -299,6 +303,7 @@ class MainWindow(QMainWindow):
             ("(3) Ex 11.15 & 11.18", 2),
             ("(4) Exercise 11.22", 3),
             ("(5) Case Explorer", 4),
+            ("(6) Filter Builder (Disco)", 5),
         ]
 
         for text, index in nav_items:
@@ -477,6 +482,7 @@ class MainWindow(QMainWindow):
         # Populate Overview and Case Explorer
         self.page_overview.load_dataset(dataset)
         self.page_case_explorer.set_dataset(dataset)
+        self.page_filter_builder.set_dataset(dataset)
 
         # Reset other pages
         self.page_11_7.clear()
@@ -520,6 +526,7 @@ class MainWindow(QMainWindow):
         self.page_11_7.clear()
         self.page_11_15_18.clear()
         self.page_11_22.clear()
+        self.page_filter_builder.set_dataset(self._dataset)
         self._start_analysis()
 
     def _start_analysis(self) -> None:
