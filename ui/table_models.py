@@ -11,6 +11,8 @@ from PySide6.QtGui import QColor, QFont
 
 EVIDENCE_BG_COLOR = QColor("#FEF08A")  # Soft yellow
 EVIDENCE_TEXT_COLOR = QColor("#713F12")  # Deep amber/brown
+DEFAULT_CELL_TEXT_COLOR = QColor("#0F172A")  # High contrast slate 900
+DEFAULT_HEADER_TEXT_COLOR = QColor("#1E293B")  # Deep slate 800
 
 COLUMN_HEADER_LABELS: dict[str, str] = {
     "_orig_idx": "XES Row Index",
@@ -115,8 +117,10 @@ class PandasTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.BackgroundRole and is_evidence_row:
             return EVIDENCE_BG_COLOR
 
-        if role == Qt.ItemDataRole.ForegroundRole and is_evidence_row:
-            return EVIDENCE_TEXT_COLOR
+        if role == Qt.ItemDataRole.ForegroundRole:
+            if is_evidence_row:
+                return EVIDENCE_TEXT_COLOR
+            return DEFAULT_CELL_TEXT_COLOR
 
         if role == Qt.ItemDataRole.FontRole and is_evidence_row:
             return self._bold_font
@@ -129,6 +133,12 @@ class PandasTableModel(QAbstractTableModel):
         orientation: Qt.Orientation,
         role: int = Qt.ItemDataRole.DisplayRole,
     ) -> Any:
+        if role == Qt.ItemDataRole.ForegroundRole:
+            return DEFAULT_HEADER_TEXT_COLOR
+
+        if role == Qt.ItemDataRole.FontRole and orientation == Qt.Orientation.Horizontal:
+            return self._bold_font
+
         if role != Qt.ItemDataRole.DisplayRole:
             return None
 

@@ -41,7 +41,7 @@ GLOBAL_STYLESHEET = f"""
 /* Global Reset & Base Typography */
 QWidget {{
     color: {COLOR_TEXT_PRIMARY};
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
     font-size: 13px;
 }}
 
@@ -197,25 +197,18 @@ def create_light_palette() -> QPalette:
 
 
 def apply_light_theme(target: QApplication | QWidget | None = None) -> None:
-    """Apply the high-contrast light palette and stylesheet to the target or active app."""
+    """Apply the high-contrast light palette, Fusion style, and stylesheet."""
     palette = create_light_palette()
 
-    if target is None:
-        app = QApplication.instance()
-        if app is not None and isinstance(app, QApplication):
-            app.setPalette(palette)
-            app.setStyleSheet(GLOBAL_STYLESHEET)
-        return
+    app = QApplication.instance()
+    if app is not None and isinstance(app, QApplication):
+        app.setStyle("Fusion")
+        app.setPalette(palette)
+        app.setStyleSheet(GLOBAL_STYLESHEET)
 
     if isinstance(target, QApplication):
+        target.setStyle("Fusion")
         target.setPalette(palette)
         target.setStyleSheet(GLOBAL_STYLESHEET)
     elif isinstance(target, QWidget):
         target.setPalette(palette)
-        # Apply stylesheet to parent app if available, else widget
-        app = QApplication.instance()
-        if app is not None and isinstance(app, QApplication):
-            app.setStyleSheet(GLOBAL_STYLESHEET)
-            app.setPalette(palette)
-        else:
-            target.setStyleSheet(GLOBAL_STYLESHEET)

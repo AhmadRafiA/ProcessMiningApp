@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import os
 
+import pandas as pd
 import pytest
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import QApplication
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 from ui.main_window import MainWindow
+from ui.table_models import PandasTableModel
 from ui.theme import (
     COLOR_BG_CARD,
     COLOR_PRIMARY,
@@ -72,6 +75,15 @@ def test_apply_light_theme_to_main_window(qapp: QApplication) -> None:
     table_explorer = win.page_case_explorer.table_view
     exp_pal = table_explorer.palette()
     assert exp_pal.color(QPalette.ColorRole.Text).name().lower() == COLOR_TEXT_PRIMARY.lower()
+
+    # Verify global stylesheet has high-contrast table definitions applied
+    assert "QTableView" in qapp.styleSheet()
+    assert COLOR_TEXT_PRIMARY.lower() in qapp.styleSheet().lower()
+
+    # Verify table model returns explicit high contrast foreground
+    test_model = PandasTableModel(pd.DataFrame({"col": ["val"]}))
+    fg_col = test_model.data(test_model.index(0, 0), Qt.ItemDataRole.ForegroundRole)
+    assert fg_col.name().lower() == COLOR_TEXT_PRIMARY.lower()
 
     win.close()
     qapp.processEvents()

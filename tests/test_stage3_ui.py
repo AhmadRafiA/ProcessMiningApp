@@ -108,9 +108,12 @@ def test_pandas_table_model_formatting_and_alignment(qapp: QApplication) -> None
     assert isinstance(font, QFont)
     assert font.bold() is True
 
-    # Row 1 is NOT evidence -> default styling (None)
+    # Row 1 is NOT evidence -> background is None (allows alternating rows)
+    # Foreground must return explicit high-contrast slate color
     idx_non_ev = model.index(1, 0)
     assert model.data(idx_non_ev, Qt.ItemDataRole.BackgroundRole) is None
+    assert isinstance(model.data(idx_non_ev, Qt.ItemDataRole.ForegroundRole), QColor)
+    assert model.data(idx_non_ev, Qt.ItemDataRole.ForegroundRole).name().upper() == "#0F172A"
 
 
 def test_pandas_table_model_set_dataframe(qapp: QApplication) -> None:

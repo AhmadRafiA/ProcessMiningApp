@@ -147,7 +147,10 @@ class MainWindow(QMainWindow):
 
     def _init_ui(self) -> None:
         central_widget = QWidget()
-        central_widget.setStyleSheet("background-color: #F8FAFC; color: #0F172A;")
+        central_widget.setObjectName("centralWidget")
+        central_widget.setStyleSheet(
+            "QWidget#centralWidget { background-color: #F8FAFC; color: #0F172A; }"
+        )
         self.setCentralWidget(central_widget)
 
         root_layout = QVBoxLayout(central_widget)
@@ -169,7 +172,10 @@ class MainWindow(QMainWindow):
 
         # Content Area (QStackedWidget)
         self.stacked_widget = QStackedWidget()
-        self.stacked_widget.setStyleSheet("background-color: #F8FAFC; color: #0F172A;")
+        self.stacked_widget.setObjectName("stackedWidget")
+        self.stacked_widget.setStyleSheet(
+            "QStackedWidget#stackedWidget { background-color: #F8FAFC; color: #0F172A; }"
+        )
 
         self.page_overview = OverviewPage()
         self.page_11_7 = Ex11_7Page()
